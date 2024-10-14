@@ -10,6 +10,7 @@ public class playerMovement : MonoBehaviour
     public Image DPad;
     private Vector2 touchStart, touchEnd;
     public float DPadRadius = 40;
+    private Touch theTouch;
 
 
     [SerializeField] float moveSpeed;
@@ -29,7 +30,9 @@ public class playerMovement : MonoBehaviour
     void Update()
     {
         //getting input from keyboard controls
-        calculateMobileInput();
+ //       calculateMobileInput();
+
+        calculateTouchInput();
 
         //sets up the animator
         animationSetup();
@@ -113,6 +116,46 @@ public class playerMovement : MonoBehaviour
                 DPad.transform.position = touchEnd;
             }
 
+        }
+
+        else
+        {
+            inputDirection = Vector2.zero;
+            DPad.gameObject.SetActive(false);
+        }
+    }
+
+    void calculateTouchInput()
+    {
+        if (Input.touchCount > 0)
+        {
+            theTouch = Input.GetTouch(0);
+
+            if (theTouch.phase == TouchPhase.Began)
+            {
+                touchStart = theTouch.position;
+            }
+            else  if(theTouch.phase == TouchPhase.Moved || theTouch.phase == TouchPhase.Ended)
+                {
+                
+                touchEnd = theTouch.position;
+
+                float x = touchEnd.x - touchStart.x;
+                float y = touchEnd.y - touchStart.y;
+
+                inputDirection = new Vector2(x, y).normalized;
+
+                if ((touchEnd - touchStart).magnitude > DPadRadius)
+                {
+                    DPad.transform.position = touchStart + (touchEnd - touchStart).normalized * DPadRadius;
+                }
+
+                else
+                {
+                    DPad.transform.position = touchEnd;
+                }
+
+            }
         }
 
         else
