@@ -11,6 +11,7 @@ public class playerMovement : MonoBehaviour
     private Vector2 touchStart, touchEnd;
     public float DPadRadius = 40;
     private Touch theTouch;
+    public Slider irritationSlider;
 
 
     [SerializeField] float moveSpeed;
@@ -30,9 +31,9 @@ public class playerMovement : MonoBehaviour
     void Update()
     {
         //getting input from keyboard controls
- //       calculateMobileInput();
+       calculateMobileInput();
 
-        calculateTouchInput();
+//        calculateTouchInput();
 
         //sets up the animator
         animationSetup();
@@ -94,9 +95,12 @@ public class playerMovement : MonoBehaviour
         {
             DPad.gameObject.SetActive(true);
 
+            irritationSlider.value += 0.02f;
+
             if (Input.GetMouseButtonDown(0))
             {
                 touchStart = Input.mousePosition;
+                
             }
 
             touchEnd = Input.mousePosition;
@@ -122,6 +126,7 @@ public class playerMovement : MonoBehaviour
         {
             inputDirection = Vector2.zero;
             DPad.gameObject.SetActive(false);
+            irritationSlider.value -= 0.01f;
         }
     }
 
